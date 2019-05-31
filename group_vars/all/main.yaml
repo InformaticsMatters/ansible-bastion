@@ -1,0 +1,16 @@
+---
+
+# The cloud provider
+provider: openstack
+
+# A string prepended to each cloud object we create
+instance_base_name: graph
+
+# OpenStack
+# Type           cores mem disk
+# ---------      ----- --- ----
+# c3.small           2   4   20
+
+bastion_type: c3.small
+bastion_image_name: ScientificLinux-7-NoGui
+bastion_addr: 130.246.215.42

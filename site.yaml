@@ -1,0 +1,20 @@
+---
+
+# Create the cloud bastion instance.
+# This sets up some facts
+# and dynamically adjusts inventory groups
+
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: cloud-bastion
+
+- hosts: bastion
+  remote_user: "{{ lookup('env', 'OS_USERNAME') }}"
+  gather_facts: no
+  become: yes
+  vars:
+    ansible_ssh_private_key_file: "{{ hostvars.localhost.private_key_path }}"
+  tasks:
+  - include_role:
+      name: bastion-apps

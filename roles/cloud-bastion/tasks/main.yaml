@@ -1,0 +1,25 @@
+---
+
+- name: Assert Ansible version
+  assert:
+    that: ansible_version.full is version('2.8', '>=')
+
+# On OpenStack this is driven by variables that should be defined by
+# 'sourcing' your OpenStack Keystone file. The initial
+# 'assert' checks that these variables are set.
+
+- name: Create Bastion?
+  pause:
+    prompt: |-
+      Are you sure you want to create the '{{ instance_base_name }}' bastion?
+      Hit return to create.
+      Hit Ctrl+c and then "a" if you've changed your mind
+
+- name: Assert key variables
+  assert:
+    that: os_auth_url is defined
+
+# Off we go...
+
+- include_tasks: create-{{ provider }}-instances.yaml
+- include_tasks: gather-{{ provider }}-facts.yaml

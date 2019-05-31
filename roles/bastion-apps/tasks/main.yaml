@@ -1,0 +1,107 @@
+---
+
+# Configure a bastion node.
+
+# There's some SSH stability connecting to servers.
+# We assume fact gathering has been disabled for this role
+# so here we wait for a connection and then invoke gather facts (setup)
+# ourselves.
+
+- name: Wait for connection
+  wait_for_connection:
+
+- name: Gather facts
+  setup:
+
+- name: Defeat remote_tmp warning
+  file:
+    path: /root/.ansible/tmp
+    state: directory
+    owner: root
+    group: root
+
+- name: Install yum utils
+  package:
+    name:
+    - yum-utils
+    - "@Development tools"
+    lock_timeout: 180
+
+- name: Install extra packages
+  package:
+    name:
+    - git
+    - https://centos7.iuscommunity.org/ius-release.rpm
+    - python36
+    lock_timeout: 180
+
+- name: Extract centos user's HOME
+  getent:
+    database: passwd
+    key: "{{ os_username }}"
+    split: ":"
+
+- name: Set centos user's HOME fact
+  set_fact:
+    remote_home: "{{ getent_passwd[os_username][4] }}"
+
+- name: Create Python 3 virtual environment directory
+  file:
+    path: "{{ remote_home }}/environments"
+    state: directory
+    owner: "{{ os_username }}"
+
+- name: Create Python 3 virtual environment
+  shell: python3.6 -m venv {{ remote_venv_name }}
+  args:
+    chdir: "{{ remote_home }}/environments"
+  become: yes
+  become_user: "{{ os_username }}"
+
+- name: Add environment to bashrc
+  lineinfile:
+    path: "{{ remote_home }}/.bashrc"
+    regex: source ~/environments/{{ remote_venv_name }}/bin/activate
+    line: source ~/environments/{{ remote_venv_name }}/bin/activate
+    owner: "{{ os_username }}"
+
+- name: Create git checkout directory
+  file:
+    path: "{{ remote_home }}/git"
+    state: directory
+    owner: "{{ os_username }}"
+
+- name: Clone ansible-galaxy-cloud
+  git:
+    repo: https://github.com/InformaticsMatters/ansible-galaxy-cloud.git
+    dest: "{{ remote_home }}/git/ansible-galaxy-cloud"
+
+# Finish by copying the SSH private key we generated to the bastion
+# and then display the command required to connect...
+
+- name: Create bastion SSH directory
+  file:
+    path: "{{ remote_home }}/.ssh"
+    mode: 0700
+    owner: "{{ os_username }}"
+
+- name: Copy private key to bastion
+  copy:
+    src: "{{ lookup('env', 'HOME') }}/.ssh/{{ hostvars.localhost.private_key_filename }}"
+    dest: "{{ remote_home }}/.ssh/id_rsa"
+    mode: 0600
+    owner: "{{ os_username }}"
+
+- name: Copy public key to bastion
+  copy:
+    src: "{{ lookup('env', 'HOME') }}/.ssh/{{ hostvars.localhost.private_key_filename }}.pub"
+    dest: "{{ remote_home }}/.ssh/id_rsa.pub"
+    mode: 0600
+    owner: "{{ os_username }}"
+
+- name: Display connection command
+  debug:
+    msg: ssh -i {{ key_path }} {{ target }}
+  vars:
+    key_path: ~/.ssh/{{ hostvars.localhost.private_key_filename }}
+    target: "{{ os_username }}@{{ inventory_hostname }}"

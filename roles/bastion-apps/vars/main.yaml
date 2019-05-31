@@ -1,0 +1,4 @@
+---
+
+os_username: "{{ lookup('env', 'OS_USERNAME') }}"
+remote_venv_name: graph

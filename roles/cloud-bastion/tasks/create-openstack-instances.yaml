@@ -1,0 +1,42 @@
+---
+
+# Creates our bastion on OpenStack.
+#
+# This is driven by variables that should be defined by
+# 'sourcing' your OpenStack Keystone file. The initial
+# 'assert' checks that these variables are set.
+
+- name: Assert cloud variables
+  assert:
+    that:
+    - bastion_addr is defined
+    - bastion_addr|ipaddr
+
+- name: Set private keyfile facts
+  set_fact:
+    private_key_filename: id_rsa_{{ instance_base_name }}
+    private_key_path: >-
+      {{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}
+
+- name: Create ssh key-pair ({{ private_key_filename }})
+  openssh_keypair:
+    path: "{{ private_key_path }}"
+
+- name: Install public key ({{ private_key_filename }}.pub)
+  os_keypair:
+    auth: "{{ os_auth }}"
+    name: "{{ instance_base_name }}-key"
+    public_key_file: "{{ private_key_path }}.pub"
+    region_name: "{{ os_region_name }}"
+
+- name: Create bastion node
+  os_server:
+    auth: "{{ os_auth }}"
+    region_name: "{{ os_region_name }}"
+    name: "{{ instance_base_name }}-bastion"
+    availability_zone: "{{ os_availability_zone }}"
+    image: "{{ bastion_image_name }}"
+    flavor: "{{ bastion_type }}"
+    key_name: "{{ instance_base_name }}-key"
+    floating_ips:
+    - "{{ bastion_addr }}"

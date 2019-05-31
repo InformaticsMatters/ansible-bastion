@@ -1,0 +1,20 @@
+---
+
+- name: Assert key variables
+  assert:
+    that: os_auth_url is defined
+
+# Get information about the node
+# We simply want its IP address
+# so we can add it to the 'bastion' inventory group
+
+- name: Get bastion node facts
+  os_server_facts:
+    auth: "{{ os_auth }}"
+    region_name: "{{ os_region_name }}"
+    server: "{{ instance_base_name }}-bastion"
+
+- name: Adjust bastion node group
+  add_host:
+    groups: bastion
+    name: "{{ openstack_servers[0].interface_ip }}"
