@@ -51,10 +51,16 @@
     state: directory
     owner: "{{ os_username }}"
 
+- name: Check Python 3 virtual environment directory
+  stat:
+    path: "{{ remote_home }}/environments/{{ remote_venv_name }}"
+  resgiter: venv_dir
+
 - name: Create Python 3 virtual environment
-  shell: python3.6 -m venv {{ remote_venv_name }}
+  command: python3.6 -m venv {{ remote_venv_name }}
   args:
     chdir: "{{ remote_home }}/environments"
+  when: not venv_dir.stat.exists
   become: yes
   become_user: "{{ os_username }}"
 
@@ -75,6 +81,7 @@
   git:
     repo: https://github.com/InformaticsMatters/ansible-galaxy-cloud.git
     dest: "{{ remote_home }}/git/ansible-galaxy-cloud"
+    version: master
 
 # Finish by copying the SSH private key we generated to the bastion
 # and then display the command required to connect...
