@@ -3,6 +3,12 @@ The `bastion` project contains a `site.yaml` file and _roles_
 for the formation (and removal) of a bastion machine to support the
 Galaxy processing cluster as described in our [galaxy-cloud] project.
 
+## Provider environment
+You will need to set provider-specific environment variables before you
+can run this playbook. If you're using OpenStack you should `source` the
+keystone file provided by your stack provider. This sets up the essential
+credentials to create and access cloud resources.
+    
 ## Playbook configuration
 The playbook relies on a number of _roles_ in the project. Where appropriate,
 each role exposes its key variables in a corresponding `defaults/main.yaml`
@@ -23,12 +29,6 @@ The easiest way to over-ride the built-in values is to provide your
 own YAML-based [parameters] file called `parameters`. The project `parameters`
 file is excluded from the repository using `.gitignore`.
 
-## Provider environment
-You will need to set provider-specific environment variables before you
-can run this playbook. If you're using OpenStack you should `source` the
-keystone file provided by your stack provider. This sets up the essential
-credentials to create and access cloud resources.
-    
 ## Running the playbook
 With environment variables set and a `parameters` file written,
 run the following from the project root, ideally from inside a Python 3
