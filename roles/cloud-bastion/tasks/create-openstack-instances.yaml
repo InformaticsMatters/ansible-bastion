@@ -38,5 +38,6 @@
     image: "{{ bastion_image_name }}"
     flavor: "{{ bastion_type }}"
     key_name: "{{ instance_base_name }}-key"
+    timeout: "{{ server_timeout_m|int * 60 }}"
     floating_ips:
     - "{{ bastion_addr }}"
