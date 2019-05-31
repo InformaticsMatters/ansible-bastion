@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/InformaticsMatters/ansible-bastion.svg?branch=master)](https://travis-ci.com/InformaticsMatters/ansible-bastion)
+
 # Ansible playbooks to create a cloud-based bastion instance
 The `bastion` project contains a `site.yaml` file and _roles_
 for the formation (and removal) of a bastion machine to support the
