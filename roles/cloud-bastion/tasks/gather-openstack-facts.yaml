@@ -18,3 +18,4 @@
   add_host:
     groups: bastion
     name: "{{ openstack_servers[0].interface_ip }}"
+  changed_when: false

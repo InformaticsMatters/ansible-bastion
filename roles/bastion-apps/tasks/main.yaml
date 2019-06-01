@@ -54,7 +54,7 @@
 - name: Check Python 3 virtual environment directory
   stat:
     path: "{{ remote_home }}/environments/{{ remote_venv_name }}"
-  resgiter: venv_dir
+  register: venv_dir
 
 - name: Create Python 3 virtual environment
   command: python3.6 -m venv {{ remote_venv_name }}
@@ -106,9 +106,14 @@
     mode: 0600
     owner: "{{ os_username }}"
 
-- name: Display connection command
-  debug:
-    msg: ssh -i {{ key_path }} {{ target }}
+- name: Create connection command
+  copy:
+    content: ssh -i {{ key_path }} {{ target }}
+    dest: connect.sh
+    mode: 0700
   vars:
     key_path: ~/.ssh/{{ hostvars.localhost.private_key_filename }}
     target: "{{ os_username }}@{{ inventory_hostname }}"
+  become: yes
+  become_user: "{{ lookup('env', 'USER') }}"
+  delegate_to: localhost

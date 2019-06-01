@@ -39,20 +39,20 @@ run the following from the project root, ideally from inside a Python 3
     $ pip install -r requirements.txt
     $ ansible-playbook site.yaml --extra-vars "@parameters"
 
-The playbook creates and installs a dedicated SSH key-pair for the cloud
-provider. Its name is based on the `instance_base_name` you use. The key is
-typically called `id_rsa_<instance_base_name>` and will be written to
-your local SSH directory. For convenience the playbook ends with a message
-that provides you with the SSH command you need to run to connect to the
-new bastion instance. It'll be something like: -
+The playbook creates and installs a dedicated SSH key-pair that it generates
+for the cloud provider. Its name is based on the `instance_base_name` you use.
+The key is typically called `id_rsa_<instance_base_name>` and will be written to
+your local SSH directory. For convenience the playbook ends by writing a
+`connect.sh` script in the project root that you can use to
+connect to the new bastion instance. To connect you simply have to run: -
 
-    $ ssh -i ~/.ssh/id_rsa_graph abc12345@192.168.0.1
+    $ ./connect.sh
 
 When you login to the bastion you'll be placed into a Python 3
 virtual environment suitable for running our other playbooks.
 
-A copy of the generated key-pair is also installed on the bastion for use
-there.
+A copy of the private and public keys of the generated key-pair are also
+installed in the bastion's `~/.ssh` directory for use there.
 
 To destroy the bastion, from your local workstation, run: -
 

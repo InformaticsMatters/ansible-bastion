@@ -6,5 +6,6 @@
 **/vault-pass.txt
 
 parameters
+connect.sh
 
 .idea/
