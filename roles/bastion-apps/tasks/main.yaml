@@ -82,6 +82,8 @@
     repo: https://github.com/InformaticsMatters/ansible-galaxy-cloud.git
     dest: "{{ remote_home }}/git/ansible-galaxy-cloud"
     version: master
+  become: yes
+  become_user: "{{ os_username }}"
 
 # Here we install a parameters template n the bastion.
 # This is useful when running other playbooks from there
@@ -91,6 +93,7 @@
   template:
     src: authentication-{{ provider }}.j2
     dest: "{{ remote_home }}//git/ansible-galaxy-cloud/parameters"
+    owner: "{{ os_username }}"
 
 # Finish by copying the SSH private key we generated to the bastion
 # and then display the command required to connect...
