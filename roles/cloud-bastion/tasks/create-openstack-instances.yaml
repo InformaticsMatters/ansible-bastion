@@ -18,11 +18,11 @@
     private_key_path: >-
       {{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}
 
-- name: Create ssh key-pair ({{ private_key_filename }})
+- name: Create local ssh key-pair ({{ private_key_filename }})
   openssh_keypair:
     path: "{{ private_key_path }}"
 
-- name: Install public key ({{ private_key_filename }}.pub)
+- name: Install cloud public key ({{ private_key_filename }}.pub)
   os_keypair:
     auth: "{{ os_auth }}"
     name: "{{ instance_base_name }}-key"

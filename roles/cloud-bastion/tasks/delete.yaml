@@ -33,3 +33,20 @@
     region_name: "{{ os_region_name }}"
     name: "{{ instance_base_name }}-bastion"
     state: absent
+
+- name: Delete cloud public key ({{ instance_base_name }}-key }})
+  os_keypair:
+    auth: "{{ os_auth }}"
+    name: "{{ instance_base_name }}-key"
+    region_name: "{{ os_region_name }}"
+    state: absent
+
+- name: Delete connection command
+  file:
+    path: connect.sh
+    state: absent
+
+- name: Delete local ssh key-pair
+  openssh_keypair:
+    path: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}"
+    state: absent
