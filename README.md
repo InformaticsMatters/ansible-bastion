@@ -54,8 +54,9 @@ virtual environment suitable for running our other playbooks.
 A copy of the private and public keys of the generated key-pair are also
 installed in the bastion's `~/.ssh` directory for use there.
 
-To destroy the bastion, the created SSH key-pair, the server public key
-and the connect script from your local workstation, run: -
+You should keep the bastion as long as you have your associated cluster,
+when you want to destroy the bastion, the created SSH key-pair, the server
+public key and the connect script from your local workstation, run: -
 
     $ ansible-playbook unsite.yaml --extra-vars "@parameters"
 
