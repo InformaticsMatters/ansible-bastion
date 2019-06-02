@@ -25,4 +25,3 @@
 
 - include_tasks: create-{{ provider }}-instances.yaml
 - include_tasks: gather-{{ provider }}-facts.yaml
-- include_tasks: install-{{ provider }}-parameters.yaml

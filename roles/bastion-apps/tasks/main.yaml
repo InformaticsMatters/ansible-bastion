@@ -83,6 +83,15 @@
     dest: "{{ remote_home }}/git/ansible-galaxy-cloud"
     version: master
 
+# Here we install a parameters template n the bastion.
+# This is useful when running other playbooks from there
+# that need to interact with the cloud provider.
+
+- name: Write initial parameters
+  template:
+    src: authentication-{{ provider }}.j2
+    dest: "{{ remote_home }}//git/ansible-galaxy-cloud/parameters"
+
 # Finish by copying the SSH private key we generated to the bastion
 # and then display the command required to connect...
 
