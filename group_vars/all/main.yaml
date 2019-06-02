@@ -4,7 +4,7 @@
 provider: openstack
 
 # A string prepended to each cloud object we create
-instance_base_name: graph
+instance_base_name: galaxy
 
 # OpenStack
 # Type           cores mem disk
