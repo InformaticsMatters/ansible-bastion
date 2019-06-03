@@ -35,13 +35,13 @@
     - python36
     lock_timeout: 180
 
-- name: Extract centos user's HOME
+- name: Extract user's HOME
   getent:
     database: passwd
     key: "{{ os_username }}"
     split: ":"
 
-- name: Set centos user's HOME fact
+- name: Set user's HOME fact
   set_fact:
     remote_home: "{{ getent_passwd[os_username][4] }}"
 
@@ -129,3 +129,26 @@
   become: yes
   become_user: "{{ lookup('env', 'USER') }}"
   delegate_to: localhost
+
+# Now permit ssh access to the bastion by adding
+# any public keys (.pub files) found in the project root.
+# The keys are added to the node's 'centos' account.
+
+- name: Create authorised users from public keys (centos)
+  authorized_key:
+    user: centos
+    key: "{{ lookup('file', item) }}"
+  with_fileglob:
+  - "*.pub"
+
+# We also copy these keys to the bastion for use
+# when the cluster's instantiated.
+
+- name: Copy public keys
+  copy:
+    src: "{{ item }}"
+    dest: "{{ remote_home }}/{{ item|basename }}"
+    owner: "{{ os_username }}"
+    mode: 0644
+  with_fileglob:
+  - "*.pub"
