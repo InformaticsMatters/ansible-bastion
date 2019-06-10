@@ -6,7 +6,7 @@ provider: openstack
 # A string prepended to each cloud object we create
 instance_base_name: cluster
 
-# OpenStack
+# OpenStack
 # Type           cores mem disk
 # ---------      ----- --- ----
 # c3.small           2   4   20
