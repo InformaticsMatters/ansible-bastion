@@ -1,6 +1,8 @@
-[![Build Status](https://travis-ci.com/InformaticsMatters/ansible-bastion.svg?branch=master)](https://travis-ci.com/InformaticsMatters/ansible-bastion)
-
 # Ansible playbooks to create a cloud-based bastion instance
+
+[![Build Status](https://travis-ci.com/InformaticsMatters/ansible-bastion.svg?branch=master)](https://travis-ci.com/InformaticsMatters/ansible-bastion)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+
 The `ansible-bastion` project contains a `site.yaml` file and _roles_
 for the formation (and removal) of a bastion machine to support the
 Galaxy processing cluster as described in our [galaxy-cloud] project.
@@ -54,11 +56,13 @@ virtual environment suitable for running our other playbooks.
 A copy of the private and public keys of the generated key-pair are also
 installed in the bastion's `~/.ssh` directory for use there.
 
-You should keep the bastion as long as you have your associated cluster,
-when you want to destroy the bastion, the created SSH key-pair, the server
-public key and the connect script from your local workstation, run: -
+When you want to delete the Bastion run: -
 
     $ ansible-playbook unsite.yaml --extra-vars "@parameters"
+
+>   CAUTION: You should keep the bastion as long as you have your associated
+    cluster, when you destroy the bastion, the created SSH key-pair, the server
+    public key and the connect script from your local workstation wil be lost.
 
 ---
 
