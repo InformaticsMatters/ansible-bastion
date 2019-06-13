@@ -20,6 +20,15 @@
     owner: root
     group: root
 
+# Try to defeat the
+# 'Can not create db_info table: database is locked' error
+# seen when we try to install the yum utils.
+# Let's wait here for a minute or so...
+
+- name: Try to avoid 'database is locked' error
+  pause:
+    seconds: 60
+
 - name: Install yum utils
   package:
     name:
