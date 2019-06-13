@@ -25,7 +25,7 @@
     name:
     - yum-utils
     - "@Development tools"
-    lock_timeout: 180
+    lock_timeout: 240
 
 - name: Install extra packages
   package:
@@ -33,7 +33,7 @@
     - git
     - https://centos7.iuscommunity.org/ius-release.rpm
     - python36
-    lock_timeout: 180
+    lock_timeout: 240
 
 - name: Extract user's HOME
   getent:
