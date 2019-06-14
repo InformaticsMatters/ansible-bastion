@@ -10,6 +10,11 @@
     - os_auth_url is defined
     - os_auth_url|length > 0
 
+- name: Display dangerous variables
+  debug:
+    msg: >-
+      instance_base_name={{ instance_base_name }}
+
 # Deletes our bastion.
 #
 # On OpenStack this is driven by variables that should be defined by
