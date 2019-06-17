@@ -41,7 +41,3 @@
     timeout: "{{ server_timeout_m|int * 60 }}"
     floating_ips:
     - "{{ bastion_addr }}"
-  register: bastion
-  retries: 5
-  delay: 30
-  until: not bastion.failed
