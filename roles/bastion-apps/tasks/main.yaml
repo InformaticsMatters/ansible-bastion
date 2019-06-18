@@ -86,7 +86,7 @@
     state: directory
     owner: "{{ os_username }}"
 
-- name: Clone ansible-galaxy-cloud
+- name: Clone ansible-galaxy-cloud (into ~/.git)
   git:
     repo: https://github.com/InformaticsMatters/ansible-galaxy-cloud.git
     dest: "{{ remote_home }}/git/ansible-galaxy-cloud"
@@ -101,7 +101,7 @@
 - name: Write initial parameters
   template:
     src: authentication-{{ provider }}.j2
-    dest: "{{ remote_home }}//git/ansible-galaxy-cloud/parameters"
+    dest: "{{ remote_home }}/git/ansible-galaxy-cloud/parameters"
     owner: "{{ os_username }}"
 
 # Finish by copying the SSH private key we generated to the bastion
@@ -113,21 +113,21 @@
     mode: 0700
     owner: "{{ os_username }}"
 
-- name: Copy private key to bastion
+- name: Copy SSH private key to bastion
   copy:
     src: "{{ lookup('env', 'HOME') }}/.ssh/{{ hostvars.localhost.private_key_filename }}"
     dest: "{{ remote_home }}/.ssh/id_rsa"
     mode: 0600
     owner: "{{ os_username }}"
 
-- name: Copy public key to bastion
+- name: Copy SSH public key to bastion
   copy:
     src: "{{ lookup('env', 'HOME') }}/.ssh/{{ hostvars.localhost.private_key_filename }}.pub"
     dest: "{{ remote_home }}/.ssh/id_rsa.pub"
     mode: 0600
     owner: "{{ os_username }}"
 
-- name: Create connection command
+- name: Create local connection command (./connect.sh)
   copy:
     content: ssh -i {{ key_path }} {{ target }}
     dest: connect.sh
@@ -148,16 +148,16 @@
     user: centos
     key: "{{ lookup('file', item) }}"
   with_fileglob:
-  - "*.pub"
+  - "{{ role_path }}/../../*.pub"
 
 # We also copy these keys to the bastion for use
 # when the cluster's instantiated.
 
-- name: Copy public keys
+- name: Copy public keys (to ~/git/ansible-galaxy-cloud)
   copy:
     src: "{{ item }}"
-    dest: "{{ remote_home }}/{{ item|basename }}"
+    dest: "{{ remote_home }}/git/ansible-galaxy-cloud/{{ item|basename }}"
     owner: "{{ os_username }}"
     mode: 0644
   with_fileglob:
-  - "*.pub"
+  - "{{ role_path }}/../../*.pub"
