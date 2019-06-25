@@ -48,7 +48,7 @@
 
 - name: Delete connection command
   file:
-    path: connect.sh
+    path: connect-{{ instance_base_name }}.sh
     state: absent
 
 - name: Delete local ssh key-pair

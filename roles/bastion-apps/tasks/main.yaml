@@ -2,13 +2,14 @@
 
 # Configure a bastion node.
 
-# There's some SSH stability connecting to servers.
+# There's some SSH instability connecting to servers.
 # We assume fact gathering has been disabled for this role
 # so here we wait for a connection and then invoke gather facts (setup)
 # ourselves.
 
 - name: Wait for connection
   wait_for_connection:
+    timeout: 120
 
 - name: Gather facts
   setup:
@@ -127,10 +128,10 @@
     mode: 0600
     owner: "{{ os_username }}"
 
-- name: Create local connection command (./connect.sh)
+- name: Create local connection command (./connect-{{ instance_base_name }}.sh)
   copy:
     content: ssh -i {{ key_path }} {{ target }}
-    dest: connect.sh
+    dest: connect-{{ instance_base_name }}.sh
     mode: 0700
   vars:
     key_path: ~/.ssh/{{ hostvars.localhost.private_key_filename }}

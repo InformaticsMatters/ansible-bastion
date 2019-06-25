@@ -39,16 +39,17 @@ run the following from the project root, ideally from inside a Python 3
 [virtual environment] on your local control machine (a desktop or laptop): -
 
     $ pip install -r requirements.txt
-    $ ansible-playbook site.yaml --extra-vars "@parameters"
+    $ ansible-playbook site.yaml -e "@parameters"
 
 The playbook creates and installs a dedicated SSH key-pair that it generates
 for the cloud provider. Its name is based on the `instance_base_name` you use.
 The key is typically called `id_rsa_<instance_base_name>` and will be written to
 your local SSH directory. For convenience the playbook ends by writing a
-`connect.sh` script in the project root that you can use to
-connect to the new bastion instance. To connect you simply have to run: -
+`connect-<base-name>.sh` script in the project root that you can use to
+connect to the new bastion instance. To connect to bastion with the
+base-name galaxy you simply have to run: -
 
-    $ ./connect.sh
+    $ ./connect-galaxy.sh
 
 When you login to the bastion you'll be placed into a Python 3
 virtual environment suitable for running our other playbooks.
@@ -58,7 +59,7 @@ installed in the bastion's `~/.ssh` directory for use there.
 
 When you want to delete the Bastion run: -
 
-    $ ansible-playbook unsite.yaml --extra-vars "@parameters"
+    $ ansible-playbook unsite.yaml -e "@parameters"
 
 >   CAUTION: You should keep the bastion as long as you have your associated
     cluster, when you destroy the bastion, the created SSH key-pair, the server
