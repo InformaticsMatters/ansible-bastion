@@ -5,7 +5,7 @@
 **/*.swp
 **/vault-pass.txt
 
-connect.sh
+connect*.sh
 *parameters
 *.pub
 
