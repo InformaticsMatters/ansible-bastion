@@ -14,3 +14,4 @@ instance_base_name: cluster
 bastion_type: c3.small
 bastion_image_name: ScientificLinux-7-NoGui
 bastion_addr: 130.246.215.42
+bastion_network: xchem-private

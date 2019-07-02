@@ -6,7 +6,7 @@
 **/vault-pass.txt
 
 connect.sh
-parameters
+*parameters
 *.pub
 
 .idea/

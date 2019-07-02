@@ -36,6 +36,7 @@
     name: "{{ instance_base_name }}-bastion"
     availability_zone: "{{ os_availability_zone }}"
     image: "{{ bastion_image_name }}"
+    network: "{{ bastion_network }}"
     flavor: "{{ bastion_type }}"
     key_name: "{{ instance_base_name }}-key"
     timeout: "{{ server_timeout_m|int * 60 }}"
