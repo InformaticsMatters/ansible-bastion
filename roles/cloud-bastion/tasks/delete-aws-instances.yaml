@@ -24,9 +24,23 @@
 # (we see errors if it's not there anyway)
 # so just delete the server...
 
-#- name: Delete bastion node
-#  ec2:
-#    state: absent
+- name: Get bastion node facts
+  ec2_instance_facts:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ instance_base_name }}-bastion"
+      instance-state-name:
+      - 'running'
+  register: bastion_facts
+  changed_when: false
+
+- name: Delete bastion node
+  ec2:
+    region: "{{ aws_region }}"
+    instance_ids:
+    - "{{ bastion_facts.instances[0].instance_id }}"
+    state: absent
+  when: bastion_facts.instances|length == 1
 
 - name: Delete bastion security group
   ec2_group:
@@ -39,14 +53,12 @@
 - name: Delete cloud public key ({{ instance_base_name }}-key }})
   ec2_key:
     region: "{{ aws_region }}"
+    name: "{{ instance_base_name }}-key"
     state: absent
-    instance_tags:
-      name: "{{ instance_base_name }}-bastion"
-      graph: "{{ instance_base_name }}"
 
 - name: Delete connection command
   file:
-    path: connect-{{ instance_base_name }}.sh
+    path: connect-{{ instance_base_name }}-{{ provider }}.sh
     state: absent
 
 - name: Delete local ssh key-pair
