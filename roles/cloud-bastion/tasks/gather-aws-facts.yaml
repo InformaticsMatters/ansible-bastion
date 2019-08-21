@@ -1,0 +1,27 @@
+---
+
+- name: Assert key variables
+  assert:
+    that: os_auth_url is defined
+
+# Get information about the node
+# We simply want its IP address
+# so we can add it to the 'bastion' inventory group
+
+- name: Get bastion node facts
+  ec2_instance_facts:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ instance_base_name }}-bastion"
+      instance-state-name:
+      - 'running'
+  register: bastion_facts
+  changed_when: false
+
+- name: Adjust bastion node group
+  add_host:
+    groups: bastion
+    name: "{{ bastion_facts.instances[0].public_ip_address }}"
+  changed_when: false
+  when:
+  - bastion_facts.instances|length == 1

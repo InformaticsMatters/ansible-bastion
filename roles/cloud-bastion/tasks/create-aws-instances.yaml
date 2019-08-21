@@ -1,0 +1,72 @@
+---
+
+# Creates our bastion on AWS.
+
+- name: Assert key variables
+  assert:
+    that:
+      - aws_access_key_id is defined
+      - aws_access_key_id|length > 0
+
+- name: Set private keyfile facts
+  set_fact:
+    private_key_filename: id_rsa_{{ instance_base_name }}
+    private_key_path: >-
+      {{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}
+
+- name: Create local ssh key-pair ({{ private_key_filename }})
+  openssh_keypair:
+    path: "{{ private_key_path }}"
+
+- name: Install cloud public key ({{ private_key_filename }}.pub)
+  ec2_key:
+    name: "{{ instance_base_name }}-key"
+    key_material: "{{ lookup('file', public_key_file) }}"
+    region: "{{ aws_region }}"
+  vars:
+    public_key_file: "{{ private_key_path }}.pub"
+
+- name: Get bastion node facts
+  ec2_instance_facts:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ instance_base_name }}-bastion"
+      instance-state-name:
+      - 'pending'
+      - 'running'
+      - 'stopped'
+      - 'stopping'
+  register: bastion_facts
+  changed_when: false
+
+- name: Create bastion security group
+  ec2_group:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ aws_vpc_id }}"
+    name: "{{ instance_base_name }}-sg"
+    description: "{{ instance_base_name }} security group"
+    rules:
+    - proto: tcp
+      from_port: 22
+      to_port: 22
+      cidr_ip: 0.0.0.0/0
+    tags:
+      Name: "{{ instance_base_name }}-bastion"
+      graph: "{{ instance_base_name }}"
+  when: bastion_facts.instances|length == 0
+
+- name: Create bastion node
+  ec2:
+    region: "{{ aws_region }}"
+    key_name: "{{ instance_base_name }}-key"
+    instance_type: t2.micro
+    image: "{{ aws_region_image_id }}"
+    group:
+    - "{{ instance_base_name }}-sg"
+    wait: yes
+    vpc_subnet_id: "{{ aws_vpc_subnet_id }}"
+    assign_public_ip: yes
+    instance_tags:
+      Name: "{{ instance_base_name }}-bastion"
+      graph: "{{ instance_base_name }}"
+  when: bastion_facts.instances|length == 0

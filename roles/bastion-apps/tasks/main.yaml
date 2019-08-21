@@ -21,29 +21,24 @@
     owner: root
     group: root
 
-# Try to defeat the
-# 'Can not create db_info table: database is locked' error
-# seen when we try to install the yum utils.
-# Let's wait here for a minute or so...
-
-- name: Try to avoid 'database is locked' error
-  pause:
-    seconds: 60
-
 - name: Install yum utils
   package:
     name:
     - yum-utils
     - "@Development tools"
-    lock_timeout: 240
 
-- name: Install extra packages
-  package:
+- name: Install key packages
+  yum:
     name:
     - git
     - https://centos7.iuscommunity.org/ius-release.rpm
+    update_cache: yes
+
+- name: Install Python3
+  yum:
+    name:
     - python36
-    lock_timeout: 240
+    update_cache: yes
 
 - name: Extract user's HOME
   getent:
@@ -128,10 +123,10 @@
     mode: 0600
     owner: "{{ os_username }}"
 
-- name: Create local connection command (./connect-{{ instance_base_name }}.sh)
+- name: Create local connection command (./connect-{{ instance_base_name }}-{{ provider }}.sh)
   copy:
     content: ssh -i {{ key_path }} {{ target }}
-    dest: connect-{{ instance_base_name }}.sh
+    dest: connect-{{ instance_base_name }}-{{ provider }}.sh
     mode: 0700
   vars:
     key_path: ~/.ssh/{{ hostvars.localhost.private_key_filename }}

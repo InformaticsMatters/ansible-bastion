@@ -1,0 +1,12 @@
+---
+
+# A parameter template for OpenStack
+
+provider: openstack
+instance_base_name: graph
+
+os_username: SetMe
+os_project_id: SetMe
+
+bastion_addr: SetMe
+bastion_network: SetMe

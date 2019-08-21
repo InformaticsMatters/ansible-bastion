@@ -10,7 +10,7 @@
       name: cloud-bastion
 
 - hosts: bastion
-  remote_user: "{{ lookup('env', 'OS_USERNAME') }}"
+  remote_user: "{{ os_username }}"
   gather_facts: no
   become: yes
   vars:
