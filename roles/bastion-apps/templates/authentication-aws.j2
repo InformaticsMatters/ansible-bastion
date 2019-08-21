@@ -1,7 +1,14 @@
 # Parameter setup for an AWS cluster
 
+provider: {{  provider }}
+
+aws_access_key_id: {{ aws_access_key_id }}
+aws_secret_access_key: {{ aws_secret_access_key }}
+aws_region: {{ aws_region }}
+
 os_username: {{ os_username }}
-os_region_name: {{ os_region_name }}
+
+instance_base_name: {{ instance_base_name }}
 
 aws_region: {{ aws_region }}
 aws_region_image_id: {{ aws_region_image_id }}
