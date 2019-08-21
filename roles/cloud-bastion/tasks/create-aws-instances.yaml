@@ -50,6 +50,14 @@
       from_port: 22
       to_port: 22
       cidr_ip: 0.0.0.0/0
+    - proto: tcp
+      from_port: 111
+      to_port: 111
+      cidr_ip: "{{ instance_base_name }}-sg"
+    - proto: tcp
+      from_port: 2049
+      to_port: 2049
+      cidr_ip: "{{ instance_base_name }}-sg"
     tags:
       Name: "{{ instance_base_name }}-bastion"
       graph: "{{ instance_base_name }}"
