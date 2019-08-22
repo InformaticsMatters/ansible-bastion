@@ -22,10 +22,11 @@
     group: root
 
 - name: Install yum utils
-  package:
+  yum:
     name:
     - yum-utils
     - "@Development tools"
+    lock_timeout: 240
 
 - name: Install key packages
   yum:
@@ -33,12 +34,14 @@
     - git
     - https://centos7.iuscommunity.org/ius-release.rpm
     update_cache: yes
+    lock_timeout: 240
 
 - name: Install Python3
   yum:
     name:
     - python36
     update_cache: yes
+    lock_timeout: 240
 
 - name: Extract user's HOME
   getent:
@@ -123,7 +126,7 @@
     mode: 0600
     owner: "{{ os_username }}"
 
-- name: Create local connection command (./connect-{{ instance_base_name }}-{{ provider }}.sh)
+- name: Create local connection command
   copy:
     content: ssh -i {{ key_path }} {{ target }}
     dest: connect-{{ instance_base_name }}-{{ provider }}.sh
