@@ -2,6 +2,6 @@
 
 ansible == 2.8.4
 boto == 2.49.0
-boto3 == 1.9.212
+boto3 == 1.9.213
 netaddr == 0.7.19
-openstacksdk ==  0.31.2
+openstacksdk ==  0.34.0
