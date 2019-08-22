@@ -3,8 +3,8 @@
 - name: Assert key variables
   assert:
     that:
-      - aws_access_key_id is defined
-      - aws_access_key_id|length > 0
+    - aws_access_key_id is defined
+    - aws_access_key_id|length > 0
 
 - name: Display dangerous variables
   debug:
@@ -12,13 +12,6 @@
       instance_base_name={{ instance_base_name }}
 
 # Deletes our bastion.
-
-- name: Delete Bastion?
-  pause:
-    prompt: |-
-      Are you sure you want to delete the '{{ instance_base_name }}' bastion?
-      Hit return to delete.
-      Hit Ctrl+c and then "a" if you've changed your mind
 
 # No need to detach the volume
 # (we see errors if it's not there anyway)

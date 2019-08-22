@@ -1,3 +1,10 @@
 ---
 
+- name: Delete Bastion?
+  pause:
+    prompt: |-
+      Are you sure you want to delete the {{ provider }} '{{ instance_base_name }}' bastion?
+      Hit return to delete.
+      Hit Ctrl+c and then "a" if you've changed your mind
+
 - include_tasks: delete-{{ provider }}-instances.yaml

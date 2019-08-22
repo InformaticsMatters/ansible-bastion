@@ -21,13 +21,6 @@
 # 'sourcing' your OpenStack Keystone file. The initial
 # 'assert' checks that these variables are set.
 
-- name: Delete Bastion?
-  pause:
-    prompt: |-
-      Are you sure you want to delete the '{{ instance_base_name }}' bastion?
-      Hit return to delete.
-      Hit Ctrl+c and then "a" if you've changed your mind
-
 # No need to detach the volume
 # (we see errors if it's not there anyway)
 # so just delete the server...

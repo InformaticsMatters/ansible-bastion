@@ -5,14 +5,14 @@
 - name: Assert key variables
   assert:
     that:
-      - aws_access_key_id is defined
-      - aws_access_key_id|length > 0
+    - aws_access_key_id is defined
+    - aws_access_key_id|length > 0
 
 - name: Set private keyfile facts
   set_fact:
-    private_key_filename: id_rsa_{{ instance_base_name }}
+    private_key_filename: id_rsa_{{ instance_base_name }}{{ provider }}
     private_key_path: >-
-      {{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}
+      {{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}_{{ provider }}
 
 - name: Create local ssh key-pair ({{ private_key_filename }})
   openssh_keypair:
