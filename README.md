@@ -49,7 +49,7 @@ your local SSH directory. For convenience the playbook ends by writing a
 connect to the new bastion instance. To connect to bastion with the
 base-name galaxy you simply have to run: -
 
-    $ ./connect-{{ instance_base_name }}.sh
+    $ ./connect-{{ instance_base_name }}-{{ provider }}.sh
 
 When you login to the bastion you'll be placed into a Python 3
 virtual environment suitable for running our other playbooks.

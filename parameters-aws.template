@@ -5,9 +5,9 @@
 provider: aws
 instance_base_name: graph
 
+os_username: centos
+
 aws_region: SetMe
 aws_region_image_id: SetMe
 aws_vpc_id: SetMe
 aws_vpc_subnet_id: SetMe
-
-os_username: centos
