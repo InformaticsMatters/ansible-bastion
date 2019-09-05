@@ -10,7 +10,7 @@
 
 - name: Set private keyfile facts
   set_fact:
-    private_key_filename: id_rsa_{{ instance_base_name }}{{ provider }}
+    private_key_filename: id_rsa_{{ instance_base_name }}_{{ provider }}
     private_key_path: >-
       {{ lookup('env', 'HOME') }}/.ssh/id_rsa_{{ instance_base_name }}_{{ provider }}
 
@@ -69,6 +69,11 @@
     key_name: "{{ instance_base_name }}-key"
     instance_type: t2.micro
     image: "{{ aws_region_image_id }}"
+    volumes:
+    - device_name: /dev/sda1
+      delete_on_termination: yes
+      volume_type: gp2
+      volume_size: 8
     group:
     - "{{ instance_base_name }}-sg"
     wait: yes

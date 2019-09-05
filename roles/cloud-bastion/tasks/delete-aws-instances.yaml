@@ -33,6 +33,7 @@
     instance_ids:
     - "{{ bastion_facts.instances[0].instance_id }}"
     state: absent
+    wait: yes
   when: bastion_facts.instances|length == 1
 
 - name: Delete bastion security group
