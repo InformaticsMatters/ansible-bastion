@@ -1,6 +1,6 @@
 # Python requirements for this playbook
 
-ansible == 2.8.4
+ansible == 2.10.0
 boto == 2.49.0
 boto3 == 1.9.213
 netaddr == 0.7.19
